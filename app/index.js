@@ -2,12 +2,12 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Button,
-  Dimensions,
-  SafeAreaView,
-  Text,
-  View,
+    ActivityIndicator,
+    Button,
+    Dimensions,
+    SafeAreaView,
+    Text,
+    View,
 } from 'react-native';
 import { supabase } from '../lib/supabase';
 
@@ -19,18 +19,29 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
-    supabase.auth.getUser().then(({ data: { user }, error }) => {
-      if (!isMounted) return;
-      if (error) {
-        setError('Failed to fetch user. Please try again.');
-        setLoading(false);
-      } else if (!user) {
-        router.replace('/auth/login');
-      } else {
-        setUserEmail(user.email);
-        setLoading(false);
+    const checkUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (!isMounted) return;
+        
+        if (error) {
+          console.error('Auth error:', error);
+          router.replace('/auth/login');
+        } else if (!user) {
+          router.replace('/auth/login');
+        } else {
+          setUserEmail(user.email);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        if (isMounted) {
+          router.replace('/auth/login');
+        }
       }
-    });
+    };
+    
+    checkUser();
     return () => {
       isMounted = false;
     };
@@ -109,10 +120,7 @@ export default function Home() {
             paddingVertical: 32,
             backgroundColor: 'white',
             borderRadius: 16,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.08,
-            shadowRadius: 8,
+            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
             elevation: 2,
           }}
         >

@@ -1,15 +1,14 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Modal,
   Platform,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { supabase } from '../../lib/supabase';
 
@@ -41,11 +40,20 @@ async function ensureUserProfile(user) {
 
 export default function Login() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+
+  useEffect(() => {
+    if (params.error === 'verification_failed') {
+      showModal('Email verification failed. Please try again or contact support.');
+    } else if (params.message === 'email_verified') {
+      showModal('Email verified successfully! You can now log in.');
+    }
+  }, [params]);
 
   const showModal = (message) => {
     setModalMessage(message);
@@ -59,27 +67,30 @@ export default function Login() {
     }
 
     setLoading(true);
+    console.log('Attempting login with email:', email);
 
     try {
+      console.log('Calling Supabase auth...');
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Login error details:', error);
         showModal(error.message || 'Login failed. Please try again.');
         return;
       }
 
+      console.log('Login successful, user data:', data);
       const user = data.user;
       await ensureUserProfile(user);
 
-      Alert.alert('Login Successful!', 'Welcome back!', [
-        { text: 'OK', onPress: () => router.push('/') },
-      ]);
+      console.log('User profile ensured, redirecting to home...');
+      router.replace('/');
     } catch (err) {
+      console.error('Unexpected login error:', err);
       showModal('An unexpected error occurred. Please try again.');
-      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -162,9 +173,13 @@ export default function Login() {
             placeholderTextColor="#9ca3af"
           />
           <TouchableOpacity
-            style={buttonStyle}
+            style={[
+              buttonStyle,
+              loading && { opacity: 0.7 }
+            ]}
             onPress={handleLogin}
             disabled={loading}
+            activeOpacity={0.8}
           >
             {loading ? (
               <ActivityIndicator color="white" />
@@ -174,6 +189,7 @@ export default function Login() {
                   color: 'white',
                   textAlign: 'center',
                   fontWeight: 'bold',
+                  fontSize: 16,
                 }}
               >
                 Login

@@ -92,7 +92,7 @@ export default function Register() {
         email,
         password,
         options: {
-          emailRedirectTo: 'quizlet-clone://auth/callback',
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
