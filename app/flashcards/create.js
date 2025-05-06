@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { supabase } from '../../lib/supabase';
@@ -126,107 +127,113 @@ export default function CreateFlashcard() {
         visible={successModalVisible}
         onRequestClose={() => setSuccessModalVisible(false)}
       >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          }}
-        >
+        <TouchableWithoutFeedback onPress={() => setSuccessModalVisible(false)}>
           <View
             style={{
-              backgroundColor: 'white',
-              padding: 25,
-              borderRadius: 15,
-              width: '90%',
-              maxWidth: 400,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              position: 'relative',
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
             }}
           >
-            <TouchableOpacity
+            <View
               style={{
-                position: 'absolute',
-                right: 15,
-                top: 15,
-                padding: 5,
-                zIndex: 1,
+                backgroundColor: 'white',
+                padding: 25,
+                borderRadius: 15,
+                width: '90%',
+                maxWidth: 400,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
               }}
-              onPress={() => setSuccessModalVisible(false)}
+              onStartShouldSetResponder={() => true}
             >
-              <Ionicons name="close" size={24} color="#6b7280" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 15,
+                  top: 15,
+                  padding: 5,
+                  zIndex: 1,
+                }}
+                onPress={() => setSuccessModalVisible(false)}
+              >
+                <Ionicons name="close" size={24} color="#6b7280" />
+              </TouchableOpacity>
 
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginBottom: 10,
-                textAlign: 'center',
-                color: '#1f2937',
-                marginTop: 10,
-              }}
-            >
-              Flashcard Created!
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                marginBottom: 20,
-                textAlign: 'center',
-                color: '#4b5563',
-              }}
-            >
-              Your flashcard has been saved successfully.
-            </Text>
-            <View style={{ gap: 12 }}>
-              <TouchableOpacity
+              <Text
                 style={{
-                  backgroundColor: '#3b82f6',
-                  padding: 12,
-                  borderRadius: 8,
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  setSuccessModalVisible(false);
-                  router.push('/flashcards/view');
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  marginBottom: 10,
+                  textAlign: 'center',
+                  color: '#1f2937',
+                  marginTop: 10,
                 }}
               >
-                <Text
-                  style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}
-                >
-                  View Flashcards
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+                Flashcard Created!
+              </Text>
+              <Text
                 style={{
-                  backgroundColor: '#f3f4f6',
-                  padding: 12,
-                  borderRadius: 8,
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  setSuccessModalVisible(false);
-                  router.replace('/');
+                  fontSize: 16,
+                  marginBottom: 20,
+                  textAlign: 'center',
+                  color: '#4b5563',
                 }}
               >
-                <Text
-                  style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: 16 }}
+                Your flashcard has been saved successfully.
+              </Text>
+              <View style={{ gap: 12 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#3b82f6',
+                    padding: 12,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    setSuccessModalVisible(false);
+                    router.push('/flashcards/view');
+                  }}
                 >
-                  Back to Home
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}
+                  >
+                    View Flashcards
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#f3f4f6',
+                    padding: 12,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    setSuccessModalVisible(false);
+                    router.replace('/');
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: '#3b82f6',
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                    }}
+                  >
+                    Back to Home
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </SafeAreaView>
   );
