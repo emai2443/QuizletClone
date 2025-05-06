@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -148,8 +149,22 @@ export default function CreateFlashcard() {
               shadowOpacity: 0.25,
               shadowRadius: 4,
               elevation: 5,
+              position: 'relative',
             }}
           >
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 15,
+                top: 15,
+                padding: 5,
+                zIndex: 1,
+              }}
+              onPress={() => setSuccessModalVisible(false)}
+            >
+              <Ionicons name="close" size={24} color="#6b7280" />
+            </TouchableOpacity>
+
             <Text
               style={{
                 fontSize: 20,
@@ -157,6 +172,7 @@ export default function CreateFlashcard() {
                 marginBottom: 10,
                 textAlign: 'center',
                 color: '#1f2937',
+                marginTop: 10,
               }}
             >
               Flashcard Created!
