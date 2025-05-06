@@ -1,7 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, Dimensions, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { supabase } from '../../lib/supabase';
 
 export default function ViewFlashcards() {
@@ -44,55 +54,56 @@ export default function ViewFlashcards() {
 
   const confirmDelete = (cardId) => {
     console.log('Delete button clicked for card:', cardId);
-    
+    handleDelete(cardId); // call directly without Alert
     if (isDeleting) {
       console.log('Delete already in progress');
       Alert.alert(
-        "Please Wait",
-        "A deletion is already in progress. Please wait.",
-        [{ text: "OK" }]
+        'Please Wait',
+        'A deletion is already in progress. Please wait.',
+        [{ text: 'OK' }]
       );
       return;
     }
 
     Alert.alert(
-      "Delete Flashcard",
-      "Are you sure you want to delete this flashcard? This action cannot be undone.",
+      'Delete Flashcard',
+      'Are you sure you want to delete this flashcard? This action cannot be undone.',
       [
         {
-          text: "Cancel",
-          style: "cancel",
-          onPress: () => console.log('Delete cancelled')
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => console.log('Delete cancelled'),
         },
         {
-          text: "Delete",
-          style: "destructive",
+          text: 'Delete',
+          style: 'destructive',
           onPress: () => {
             console.log('Delete confirmed for card:', cardId);
             handleDelete(cardId);
-          }
-        }
+          },
+        },
       ]
     );
   };
 
   const handleDelete = async (cardId) => {
     console.log('handleDelete called with cardId:', cardId);
-    
+
     if (!cardId) {
       console.log('Delete attempted with invalid cardId');
-      Alert.alert(
-        "Error",
-        "Invalid flashcard ID. Please try again.",
-        [{ text: "OK" }]
-      );
+      Alert.alert('Error', 'Invalid flashcard ID. Please try again.', [
+        { text: 'OK' },
+      ]);
       return;
     }
 
     setIsDeleting(true);
     try {
       // Log the current user and session
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
       console.log('Current user:', user?.id);
       console.log('User error:', userError);
 
@@ -114,34 +125,34 @@ export default function ViewFlashcards() {
         .eq('id', cardId)
         .single();
 
-      console.log('Existing card check:', { 
-        existingCard, 
+      console.log('Existing card check:', {
+        existingCard,
         checkError,
         cardId,
-        currentUserId: user.id 
+        currentUserId: user.id,
       });
 
       if (checkError) {
         console.error('Error checking card existence:', checkError);
-        throw new Error(`Failed to verify flashcard existence: ${checkError.message}`);
+        throw new Error(
+          `Failed to verify flashcard existence: ${checkError.message}`
+        );
       }
 
       if (!existingCard) {
         console.log('Card not found:', cardId);
-        Alert.alert(
-          "Error",
-          "This flashcard no longer exists.",
-          [{ text: "OK" }]
-        );
+        Alert.alert('Error', 'This flashcard no longer exists.', [
+          { text: 'OK' },
+        ]);
         return;
       }
 
       // Verify ownership
       if (existingCard.user_id !== user.id) {
-        console.log('Permission denied:', { 
-          cardUserId: existingCard.user_id, 
+        console.log('Permission denied:', {
+          cardUserId: existingCard.user_id,
           currentUserId: user.id,
-          cardQuestion: existingCard.question 
+          cardQuestion: existingCard.question,
         });
         throw new Error('You do not have permission to delete this flashcard');
       }
@@ -149,7 +160,7 @@ export default function ViewFlashcards() {
       console.log('Attempting to delete card:', {
         cardId,
         userId: user.id,
-        cardQuestion: existingCard.question
+        cardQuestion: existingCard.question,
       });
 
       const { data: deleteData, error } = await supabase
@@ -164,9 +175,13 @@ export default function ViewFlashcards() {
       if (error) {
         console.error('Delete error:', error);
         if (error.code === '23503') {
-          throw new Error('This flashcard is referenced by other data and cannot be deleted.');
+          throw new Error(
+            'This flashcard is referenced by other data and cannot be deleted.'
+          );
         } else if (error.code === '42501') {
-          throw new Error('You do not have permission to delete this flashcard. Please check your Supabase policies.');
+          throw new Error(
+            'You do not have permission to delete this flashcard. Please check your Supabase policies.'
+          );
         } else {
           throw new Error(`Failed to delete flashcard: ${error.message}`);
         }
@@ -175,20 +190,21 @@ export default function ViewFlashcards() {
       console.log('Card deleted successfully:', {
         cardId,
         userId: user.id,
-        cardQuestion: existingCard.question
+        cardQuestion: existingCard.question,
       });
 
       // Remove the deleted card from the local state
-      setCards(prevCards => {
-        const newCards = prevCards.filter(card => card.id !== cardId);
+      setCards((prevCards) => {
+        const newCards = prevCards.filter((card) => card.id !== cardId);
         console.log('Updated cards list:', newCards);
         return newCards;
       });
-      
+
       // If we deleted the current card, adjust the index
       if (cards.length > 1) {
-        setIndex(prevIndex => {
-          const newIndex = prevIndex >= cards.length - 1 ? cards.length - 2 : prevIndex;
+        setIndex((prevIndex) => {
+          const newIndex =
+            prevIndex >= cards.length - 1 ? cards.length - 2 : prevIndex;
           console.log('Updated index:', newIndex);
           return newIndex;
         });
@@ -198,17 +214,16 @@ export default function ViewFlashcards() {
         setCards([]);
       }
 
-      Alert.alert(
-        "Success",
-        "Flashcard deleted successfully",
-        [{ text: "OK" }]
-      );
+      Alert.alert('Success', 'Flashcard deleted successfully', [
+        { text: 'OK' },
+      ]);
     } catch (error) {
       console.error('Error in handleDelete:', error);
       Alert.alert(
-        "Error",
-        error.message || "An unexpected error occurred while deleting the flashcard. Please try again.",
-        [{ text: "OK" }]
+        'Error',
+        error.message ||
+          'An unexpected error occurred while deleting the flashcard. Please try again.',
+        [{ text: 'OK' }]
       );
     } finally {
       setIsDeleting(false);
@@ -252,25 +267,25 @@ export default function ViewFlashcards() {
             }}
           >
             <Text
-              style={{ 
-                fontSize: 18, 
-                color: '#4b5563', 
+              style={{
+                fontSize: 18,
+                color: '#4b5563',
                 textAlign: 'center',
-                marginBottom: 24 
+                marginBottom: 24,
               }}
             >
               No flashcards found.
             </Text>
-            <Button 
-              title="Create Your First Flashcard" 
-              onPress={() => router.push('/flashcards/create')} 
-              color="#3b82f6" 
+            <Button
+              title="Create Your First Flashcard"
+              onPress={() => router.push('/flashcards/create')}
+              color="#3b82f6"
             />
             <View style={{ height: 24 }} />
-            <Button 
-              title="← Back to Home" 
-              onPress={() => router.replace('/')} 
-              color="#6b7280" 
+            <Button
+              title="← Back to Home"
+              onPress={() => router.replace('/')}
+              color="#6b7280"
             />
           </View>
         </View>
@@ -310,13 +325,15 @@ export default function ViewFlashcards() {
               elevation: 2,
             }}
           >
-            <View style={{ 
-              width: '100%', 
-              flexDirection: 'row', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: 16 
-            }}>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 16,
+              }}
+            >
               <Text
                 style={{
                   fontSize: 20,
@@ -392,7 +409,11 @@ export default function ViewFlashcards() {
             <View style={{ height: 24 }} />
             <Button title="Next Card" onPress={nextCard} color="#3b82f6" />
             <View style={{ height: 24 }} />
-            <Button title="← Back to Home" onPress={() => router.replace('/')} color="#6b7280" />
+            <Button
+              title="← Back to Home"
+              onPress={() => router.replace('/')}
+              color="#6b7280"
+            />
           </View>
 
           {/* All Flashcards Container */}
@@ -439,7 +460,13 @@ export default function ViewFlashcards() {
                     backgroundColor: idx === index ? '#f3f4f6' : 'white',
                   }}
                 >
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
                     <View style={{ flex: 1 }}>
                       <Text
                         style={{
@@ -473,7 +500,11 @@ export default function ViewFlashcards() {
                       {isDeleting ? (
                         <ActivityIndicator size="small" color="#ef4444" />
                       ) : (
-                        <Ionicons name="trash-outline" size={20} color="#ef4444" />
+                        <Ionicons
+                          name="trash-outline"
+                          size={20}
+                          color="#ef4444"
+                        />
                       )}
                     </TouchableOpacity>
                   </View>

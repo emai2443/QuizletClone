@@ -112,7 +112,11 @@ export default function CreateFlashcard() {
         />
         <Button title="Save Flashcard" onPress={handleSave} color="#3b82f6" />
         <View style={{ height: 24 }} />
-        <Button title="← Back to Home" onPress={() => router.replace('/')} color="#6b7280" />
+        <Button
+          title="← Back to Home"
+          onPress={() => router.replace('/')}
+          color="#6b7280"
+        />
       </View>
 
       <Modal
@@ -180,7 +184,9 @@ export default function CreateFlashcard() {
                   router.push('/flashcards/view');
                 }}
               >
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
+                <Text
+                  style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}
+                >
                   View Flashcards
                 </Text>
               </TouchableOpacity>
@@ -196,7 +202,9 @@ export default function CreateFlashcard() {
                   router.replace('/');
                 }}
               >
-                <Text style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: 16 }}>
+                <Text
+                  style={{ color: '#3b82f6', fontWeight: 'bold', fontSize: 16 }}
+                >
                   Back to Home
                 </Text>
               </TouchableOpacity>
