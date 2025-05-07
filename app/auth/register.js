@@ -144,7 +144,7 @@ export default function Register() {
 
   const containerStyle = {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#1a1a1a',
   };
 
   const formStyle = {
@@ -162,17 +162,19 @@ export default function Register() {
 
   const inputStyle = {
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#4d4d4d',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     boxShadow: 'none',
     fontSize: 16,
     width: '100%',
+    backgroundColor: '#2d2d2d',
+    color: '#e5e7eb',
   };
 
   const buttonStyle = {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#60a5fa',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
@@ -180,7 +182,7 @@ export default function Register() {
   };
 
   const secondaryButtonStyle = {
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#3d3d3d',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
@@ -196,7 +198,7 @@ export default function Register() {
             fontWeight: 'bold',
             marginBottom: 32,
             textAlign: 'center',
-            color: '#1f2937',
+            color: '#e5e7eb',
           }}
         >
           Create Account
@@ -260,7 +262,7 @@ export default function Register() {
             >
               <Text
                 style={{
-                  color: '#3b82f6',
+                  color: '#60a5fa',
                   textAlign: 'center',
                   fontWeight: 'bold',
                 }}
@@ -321,7 +323,7 @@ export default function Register() {
             >
               <Text
                 style={{
-                  color: '#3b82f6',
+                  color: '#60a5fa',
                   textAlign: 'center',
                   fontWeight: 'bold',
                 }}
@@ -349,7 +351,7 @@ export default function Register() {
         >
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: '#2d2d2d',
               padding: 25,
               borderRadius: 15,
               width: '90%',
@@ -370,7 +372,7 @@ export default function Register() {
                 fontWeight: 'bold',
                 marginBottom: 10,
                 textAlign: 'center',
-                color: '#1f2937',
+                color: '#e5e7eb',
               }}
             >
               Error
@@ -380,14 +382,14 @@ export default function Register() {
                 fontSize: 16,
                 marginBottom: 20,
                 textAlign: 'center',
-                color: '#4b5563',
+                color: '#9ca3af',
               }}
             >
               {modalMessage}
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: '#3b82f6',
+                backgroundColor: '#60a5fa',
                 padding: 12,
                 borderRadius: 8,
                 alignItems: 'center',
