@@ -198,20 +198,24 @@ export default function Login() {
               </Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            style={secondaryButtonStyle}
-            onPress={() => router.push('/auth/register')}
-          >
-            <Text
-              style={{
-                color: '#60a5fa',
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}
-            >
-              Back to Register
+          <View style={{ marginTop: 16, alignItems: 'center' }}>
+            <Text style={{ color: '#9ca3af', marginBottom: 8 }}>
+              Don't have an account?
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.push('/auth/register')}
+            >
+              <Text
+                style={{
+                  color: '#60a5fa',
+                  fontWeight: 'bold',
+                  textDecorationLine: 'underline',
+                }}
+              >
+                Register Now
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       <Modal

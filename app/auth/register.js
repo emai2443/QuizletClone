@@ -2,14 +2,13 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Modal,
   Platform,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { supabase } from '../../lib/supabase';
 
@@ -92,7 +91,7 @@ export default function Register() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: 'quizletclone://auth/callback',
         },
       });
 
@@ -119,11 +118,8 @@ export default function Register() {
         return;
       }
 
-      Alert.alert(
-        'Account Created Successfully!',
-        'Please check your email for a confirmation link before logging in.',
-        [{ text: 'OK', onPress: () => router.push('/auth/login') }]
-      );
+      // Navigate to success page instead of showing alert
+      router.push('/auth/register-success');
     } catch (error) {
       console.error('Registration error:', error);
       if (error.status === 429) {
